@@ -1,6 +1,6 @@
 const sizes = {
-    grid: 4,
-    cell: 50,
+    grid: 25,
+    cell: 25,
     set_div: () => {
         const totals = document.getElementsByClassName('total')
         for (const element of totals) {
@@ -13,7 +13,7 @@ sizes.set_div()
 const actions = ['work', 'swap', 'rest']
 
 const community_args = {
-    num_commoners: 2,
+    num_commoners: 100,
     collaborability: 0.5, 
     monthly_hours: 5,
     max_damage_value: 100,

@@ -7,7 +7,7 @@ function setup() {
   cnv = createCanvas(sizes.grid * sizes.cell, sizes.grid * sizes.cell);
   cnv.parent('p5')
   community = new Community(community_args);
-  frameRate(5)
+  // frameRate(5)
 }
 
 function draw() {

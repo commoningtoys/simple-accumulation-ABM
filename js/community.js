@@ -242,6 +242,19 @@ class Community {
 
 
     if (this.days % 10 === 0) {
+
+
+      /*
+      .########..########..######..########..#######..########..########
+      .##.....##.##.......##....##....##....##.....##.##.....##.##......
+      .##.....##.##.......##..........##....##.....##.##.....##.##......
+      .########..######....######.....##....##.....##.########..######..
+      .##...##...##.............##....##....##.....##.##...##...##......
+      .##....##..##.......##....##....##....##.....##.##....##..##......
+      .##.....##.########..######.....##.....#######..##.....##.########
+      */
+
+
       this.restore_retributions()
     }
 
@@ -305,7 +318,7 @@ class Community {
       const commoner = this.commoners[i]
       const retributions = this.get_retribuitions(commoner.position, commoner.vision)
 
-      commoner.move(this.commoners, retributions)
+      commoner.move(this.commoners, this.infrastructure)
     }
     this.use_infrastructure()
     this.restore_infrastructure()

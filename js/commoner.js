@@ -47,12 +47,13 @@ class Commoner {
     // this.position.x = random_int(sizes.grid)
     // this.position.y = random_int(sizes.grid)
   }
-  move(commoners, retributions) {
-    console.log(retributions);
+  move(commoners, infrastructure) {
+    // console.log(infrastructure)
     // search for free spots with highest sugar amount
     // console.log(this.position)
     // look for free spots
     let search_positions = []
+    const retributions = []
     // search_positions.push({x: 0, y: 0})
     for (let x = -this.vision; x <= this.vision; x++) {
       for (let y = -this.vision; y <= this.vision; y++) {
@@ -60,46 +61,65 @@ class Commoner {
         const search_y = (this.position.y + y + sizes.grid) % sizes.grid
         if (this.position_available(search_x, search_y, commoners)) {
 
-          search_positions.push({ x: x + this.vision, y: y + this.vision})}
-      }
-    }
+          search_positions.push({ x, y })
 
-    console.log(this.id, search_positions)
-    // look for the fields with higher value
-    let max = 0
-    const max_positions = []
-    for (const pos of search_positions) {
-      const retribution = retributions[pos.y][pos.x]
-      if (retribution > max) {
-        max = retribution
-      }
-    }
-    // console.log(max)
-    for (let y = 0; y < retributions.length; y++) {
-      const columns = retributions[y]
-      for (let x = 0; x < columns.length; x++) {
-        const val = retributions[y][x]
-        if (val >= max) {
-          max_positions.push({ x, y })
+          retributions.push({
+            retribution: infrastructure[search_x][search_y].retribution,
+            pos: { x: search_x, y: search_y }
+          })
         }
       }
     }
+    //  console.log(retributions);
 
-    console.log(max_positions)
-    const max_position = max_positions[random_int(max_positions.length)]
-    this.position.x += (max_position.x - this.vision)
-    this.position.y += (max_position.y - this.vision)
-    // this.position.x = max_position.x
-    // this.position.y = max_position.y
+     let max = -1
+     let pos = {x: this.position.x, y: this.position.y}
+     for (let i = 0; i < retributions.length; i++){
+       const retribution = retributions[i].retribution
+       if(retribution > max){
+         max = retribution
+         pos = retributions[i].pos
+       }
+     }
+    //  console.log(this.id, max, pos);
+    // console.log(this.id, search_positions)
+    // // look for the fields with higher value
+    // let max = 0
+    // const max_positions = []
+    // for (const pos of search_positions) {
+    //   const retribution = retributions[pos.y][pos.x]
+    //   if (retribution > max) {
+    //     max = retribution
+    //   }
+    // }
+    // // console.log(max)
+    // for (let y = 0; y < retributions.length; y++) {
+    //   const columns = retributions[y]
+    //   for (let x = 0; x < columns.length; x++) {
+    //     const val = retributions[y][x]
+    //     if (val >= max) {
+    //       max_positions.push({ x, y })
+    //     }
+    //   }
+    // }
+
+    // console.log(max_positions)
+    // const max_position = max_positions[random_int(max_positions.length)]
+    // this.position.x += (max_position.x - this.vision)
+    // this.position.y += (max_position.y - this.vision)
+    // // this.position.x = max_position.x
+    // // this.position.y = max_position.y
+    this.position.x = pos.x
+    this.position.y = pos.y
     this.edge()
-    // console.log(this.position)
-    // console.log('////////////////////')
+    // // console.log(this.position)
+    // // console.log('////////////////////')
     this.display()
   }
 
   position_available(x, y, commoners) {
-    const same_positions = commoners.filter(commoner => commoner.position.x === x && commoner.position.y === y)
-    console.log(same_positions.length === 0)
+    // const same_positions = commoners.filter(commoner => commoner.position.x === x && commoner.position.y === y)
+    // console.log(same_positions.length === 0)
     // let result = false
     // for( let i = 0; i < commoners.length; i++){
 
@@ -137,8 +157,8 @@ class Commoner {
           this.resting = true
           this.happiness++
           // this.retribution -= 5
-          console.log('rest')
-        }else{
+          // console.log('rest')
+        } else {
           this.reduce_happiness(5)
           action = 'work'
         }
@@ -205,8 +225,8 @@ class Commoner {
     }
     ellipse((this.position.x * sizes.cell) + (sizes.cell / 2), (this.position.y * sizes.cell) + (sizes.cell / 2), sizes.cell * 0.9)
     fill(0)
-    textSize(20)
-    text(Math.floor(this.id), (this.position.x * sizes.cell) + (sizes.cell / 4), (this.position.y * sizes.cell) + (sizes.cell / 4), sizes.cell * 0.9)
+    textSize(10)
+    text(Math.floor(this.retribution), (this.position.x * sizes.cell) + (sizes.cell / 4), (this.position.y * sizes.cell) + (sizes.cell / 4), sizes.cell * 0.9)
 
 
 
