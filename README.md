@@ -1,7 +1,7 @@
 # Simple Amtli Accumulation
 > this model is based on the idea that the commoners can gain `resting time` the more they work. The community also assigns different values to different task executed.
 
-![alt text](docs/imgs/accumulation@1x.png "Simple Amtli Accumulation")
+![alt text](imgs/accumulation.png "Simple Amtli Accumulation")
 
 ## How it works
 This model is loosely based on the sugarscape model develpped by Epstein and [find the name]. In their model agents move around a grid world made of ressources with different values that the agents can collect and metabolize for their survival. The model also allows the agents to accumulate the resources, since some cell contain more resources than neede for the survival.
