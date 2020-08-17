@@ -81,6 +81,12 @@ class Commoner {
          pos = retributions[i].pos
        }
      }
+     // get max positions
+
+     const max_positions = retributions.filter(val => val.retribution >= max)
+    //  console.log(max_positions);
+
+     if(max_positions.length > 0)pos = max_positions[random_int(max_positions.length)].pos
     //  console.log(this.id, max, pos);
     // console.log(this.id, search_positions)
     // // look for the fields with higher value
@@ -223,7 +229,7 @@ class Commoner {
     } else {
       fill(this.colors.work)
     }
-    ellipse((this.position.x * sizes.cell) + (sizes.cell / 2), (this.position.y * sizes.cell) + (sizes.cell / 2), sizes.cell * 0.9)
+    ellipse((this.position.x * sizes.cell) + (sizes.cell / 2), (this.position.y * sizes.cell) + (sizes.cell / 2), sizes.cell * 0.333)
     fill(0)
     textSize(10)
     text(Math.floor(this.retribution), (this.position.x * sizes.cell) + (sizes.cell / 4), (this.position.y * sizes.cell) + (sizes.cell / 4), sizes.cell * 0.9)

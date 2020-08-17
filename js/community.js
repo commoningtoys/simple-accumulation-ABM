@@ -86,8 +86,10 @@ class Community {
   set_peaks(num) {
     const vector_array = new Array(num);
     for (let i = 0; i < num; i++) {
-      const x = Math.floor(Math.random() * sizes.grid);
-      const y = Math.floor(Math.random() * sizes.grid);
+      // const x = Math.floor(Math.random() * sizes.grid);
+      // const y = Math.floor(Math.random() * sizes.grid);
+      const x = sizes.grid * 0.5;
+      const y = sizes.grid * 0.5;
       vector_array[i] = createVector(x, y);
     }
     return vector_array;
@@ -134,6 +136,10 @@ class Community {
     fill(0)
     textSize(14)
     text(val, x * sizes.cell, y * sizes.cell, sizes.cell)
+  }
+
+  toggle_debug_view() {
+    this.debug_reward_fields = !this.debug_reward_fields
   }
 
   use_infrastructure() {
@@ -241,7 +247,7 @@ class Community {
     this.check_infrastructure_usability()
 
 
-    if (this.days % 10 === 0) {
+    if (this.days % 15 === 0 && this.hours === 1) {
 
 
       /*
@@ -256,6 +262,7 @@ class Community {
 
 
       this.restore_retributions()
+      // this.infrastructure = this.init_infrastructure()
     }
 
     this.hours++
@@ -283,7 +290,11 @@ class Community {
   restore_retributions() {
     for (let y = 0; y < sizes.grid; y++) {
       for (let x = 0; x < sizes.grid; x++) {
-        this.infrastructure[x][y].retribution = this.infrastructure[x][y].max_retribution
+        if (this.infrastructure[x][y].usable === true) {
+          this.infrastructure[x][y].retribution = this.infrastructure[x][y].max_retribution
+        } else {
+          this.infrastructure[x][y].retribution = 0
+        }
       }
     }
 
@@ -310,11 +321,16 @@ class Community {
   }
 
   check_infrastructure_usability() {
-    this.infrastructure.forEach(col => col.forEach(el => { if (el.value > this.max_damage_value) el.usable = false }))
+    this.infrastructure.forEach(col => col.forEach(el => {
+      if (el.value > this.max_damage_value) {
+        el.usable = false
+        el.retribution = 0
+      }
+    }))
   }
 
   move_commoners() {
-    for(let i = 0; i < this.commoners.length; i++){
+    for (let i = 0; i < this.commoners.length; i++) {
       const commoner = this.commoners[i]
       const retributions = this.get_retribuitions(commoner.position, commoner.vision)
 
