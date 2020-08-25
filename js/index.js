@@ -4,9 +4,14 @@ const happy_span = document.getElementById('happiness')
 const damage_span = document.getElementById('damage')
 const unusable_span = document.getElementById('unusable')
 function setup() {
+  colorMode(HSB, 255, 255, 255)
   cnv = createCanvas(sizes.grid * sizes.cell, sizes.grid * sizes.cell);
   cnv.parent('p5')
   community = new Community(community_args);
+  // step()
+  // step()
+  // step()
+  // step()
   // frameRate(5)
 }
 

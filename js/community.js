@@ -47,6 +47,7 @@ class Community {
   init_infrastructure() {
     let arr = []
     const peaks = this.set_peaks(2)
+    console.log(peaks);
     for (let i = 0; i < sizes.grid; i++) {
       let columns = []
       for (let j = 0; j < sizes.grid; j++) {
@@ -54,11 +55,13 @@ class Community {
         for (const center of peaks) {
           const pos = createVector(i, j)
           const d = p5.Vector.dist(pos, center)
-          const planes = 6
+          const planes = 4
           const spread = 0.35
           const val = planes - Math.round(map(Math.pow(d, spread), 0, Math.pow(sizes.grid, spread), 0, planes))
-          // retribution_value += Math.floor(map(d, 0, sizes.grid, 0, 4))
-          retribution_value = val
+          // retribution_value += Math.floor(map(d, 0, sizes.grid, 1, 3))
+          retribution_value += Math.pow(1 - (Math.floor(d)) / sizes.grid, 2)
+          // retribution_value = constrain(retribution_value, 0, 32)
+          // retribution_value = val
         }
         columns[j] = {
           value: 0,
@@ -67,9 +70,10 @@ class Community {
             x: i,
             y: j
           },
-          retribution: Math.pow(2, retribution_value),
+          // retribution: Math.pow(2, retribution_value),
+          retribution: Math.pow(2, Math.floor(constrain(map(retribution_value, 0, 1, 1, 5), 1, 5))),
           // retribution: 0,
-          max_retribution: Math.pow(2, retribution_value),
+          max_retribution: Math.pow(2, Math.floor(constrain(map(retribution_value, 0, 1, 1, 5), 1, 5))),
           usable: true
         }
       }
@@ -88,8 +92,10 @@ class Community {
     for (let i = 0; i < num; i++) {
       // const x = Math.floor(Math.random() * sizes.grid);
       // const y = Math.floor(Math.random() * sizes.grid);
-      const x = sizes.grid * 0.5;
-      const y = sizes.grid * 0.5;
+      // const x = sizes.grid * 0.5;
+      // const y = sizes.grid * 0.5;
+      const x = sizes.grid * Math.abs(i - Math.random() * 0.35);
+      const y = sizes.grid * Math.abs(i - Math.random() * 0.35);
       vector_array[i] = createVector(x, y);
     }
     return vector_array;
@@ -110,21 +116,35 @@ class Community {
       let y = 0
       col.forEach(row => {
         stroke(0)
+        const val = Math.log2(row.retribution > 0 ? row.retribution : 1)
+        let fill_color = map(val, 0, 5, 200, 25)
         if (row.consumed || !row.usable) {
-          fill(this.colors.damaged)
-          if (!row.usable) fill(this.colors.unusable)
-        } else {
-          const val = Math.floor(Math.pow((row.value / this.damage_threshold), 2) * 10) / 10
-          const col = lerpColor(this.colors.healty, this.colors.damaged, val)
-          fill(col, 255, 255)
+          fill_color = this.colors.damaged
+          // fill('#fff')
+          if (!row.usable) fill_color = this.colors.unusable
+
         }
+        //  else {
+        //   // const val = Math.floor(Math.pow((row.value / this.damage_threshold), 2) * 10) / 10
+        //   // fill((row.retribution * 8) % 200, 255, (1 - val) * 255, 1)
+
+
+        //   // fill(row.retribution, 255, (1 - val) * 255, 1)
+        //   // fill(row.retribution)
+        // }
+        const darkness = (1 - (row.value / this.damage_threshold)) * 255
+        fill(fill_color, 255, darkness, 1)
         square(x * sizes.cell, y * sizes.cell, sizes.cell)
-        if (this.debug_reward_fields) this.display_reward_fields(row.retribution, x, y)
+        fill(255)
+        textSize(14)
+        text(row.retribution, x * sizes.cell, y * sizes.cell, sizes.cell)
+        // if (this.debug_reward_fields) this.display_reward_fields(row.retribution, x, y)
         y++
       })
       x++
     })
 
+    // colorMode(RGB)
   }
 
   display_reward_fields(val, x, y) {
@@ -247,7 +267,7 @@ class Community {
     this.check_infrastructure_usability()
 
 
-    if (this.days % 15 === 0 && this.hours === 1) {
+    if (this.days % 3 === 0 && this.hours === 1) { // here the days can be set as value to change
 
 
       /*
@@ -291,7 +311,22 @@ class Community {
     for (let y = 0; y < sizes.grid; y++) {
       for (let x = 0; x < sizes.grid; x++) {
         if (this.infrastructure[x][y].usable === true) {
-          this.infrastructure[x][y].retribution = this.infrastructure[x][y].max_retribution
+          if (this.infrastructure[x][y].retribution < this.infrastructure[x][y].max_retribution) {
+            this.infrastructure[x][y].retribution += this.infrastructure[x][y].max_retribution / 4
+          }
+        } else {
+          this.infrastructure[x][y].retribution = 0
+        }
+      }
+    }
+
+  }
+
+  restore_retributions_once() {
+    for (let y = 0; y < sizes.grid; y++) {
+      for (let x = 0; x < sizes.grid; x++) {
+        if (this.infrastructure[x][y].usable === true) {
+            this.infrastructure[x][y].retribution = this.infrastructure[x][y].max_retribution
         } else {
           this.infrastructure[x][y].retribution = 0
         }
