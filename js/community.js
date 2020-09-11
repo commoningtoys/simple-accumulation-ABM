@@ -42,6 +42,8 @@ class Community {
     this.plot = new Plot(community_args.num_commoners)
 
     this.debug_reward_fields = true
+
+    this.block_restore = true
   }
 
   init_infrastructure() {
@@ -158,8 +160,8 @@ class Community {
     text(val, x * sizes.cell, y * sizes.cell, sizes.cell)
   }
 
-  toggle_debug_view() {
-    this.debug_reward_fields = !this.debug_reward_fields
+  toggle_block_restore() {
+    this.block_restore = !this.block_restore
   }
 
   use_infrastructure() {
@@ -267,8 +269,6 @@ class Community {
     this.check_infrastructure_usability()
 
 
-    if (this.days % 3 === 0 && this.hours === 1) { // here the days can be set as value to change
-
 
       /*
       .########..########..######..########..#######..########..########
@@ -280,10 +280,14 @@ class Community {
       .##.....##.########..######.....##.....#######..##.....##.########
       */
 
-
+    if (this.days % 3 === 0 && this.hours === 1 && this.block_restore === false) { // here the days can be set as value to change
       this.restore_retributions()
-      // this.infrastructure = this.init_infrastructure()
     }
+    if (this.days % 15 === 0 && this.hours === 1 && this.block_restore === true) { // here the days can be set as value to change
+      this.restore_retributions_once()
+    }
+
+
 
     this.hours++
     if (this.hours % 13 == 0) {
@@ -295,6 +299,7 @@ class Community {
       this.plot.update_chart()
     }
     if (this.days % 31 === 0 && this.hours % 13 == 1) {
+
       // this.set_plot_data()
       // this.plot.update_chart()
       this.commoners.forEach(commoner => {
@@ -304,6 +309,9 @@ class Community {
         commoner.done_for_the_month = false
         // console.log(commoner.get_actions_percentage());
       })
+      // if(this.block_restore){
+      //   this.restore_retributions_once()
+      // }
     }
   }
 
@@ -312,7 +320,8 @@ class Community {
       for (let x = 0; x < sizes.grid; x++) {
         if (this.infrastructure[x][y].usable === true) {
           if (this.infrastructure[x][y].retribution < this.infrastructure[x][y].max_retribution) {
-            this.infrastructure[x][y].retribution += this.infrastructure[x][y].max_retribution / 4
+            const max_val = parseInt(this.infrastructure[x][y].max_retribution)
+            this.infrastructure[x][y].retribution += max_val / 4
           }
         } else {
           this.infrastructure[x][y].retribution = 0

@@ -229,7 +229,7 @@ class Commoner {
     } else {
       fill(this.colors.work)
     }
-    ellipse((this.position.x * sizes.cell) + (sizes.cell / 2), (this.position.y * sizes.cell) + (sizes.cell / 2), sizes.cell * 0.333)
+    ellipse((this.position.x * sizes.cell) + (sizes.cell / 2), (this.position.y * sizes.cell) + (sizes.cell / 2), sizes.cell * 0.666)
     fill(0)
     textSize(10)
     text(Math.floor(this.retribution), (this.position.x * sizes.cell) + (sizes.cell / 4), (this.position.y * sizes.cell) + (sizes.cell / 4), sizes.cell * 0.9)

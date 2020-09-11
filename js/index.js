@@ -12,7 +12,7 @@ function setup() {
   // step()
   // step()
   // step()
-  // frameRate(5)
+  // frameRate(10)
 }
 
 function draw() {
